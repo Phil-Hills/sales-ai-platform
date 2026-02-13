@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ business_name }} | AI Agent</title>
+    <meta name="description"
+        content="AI Sales Agent with voice cloning technology. Qualify leads, schedule appointments, and close deals 24/7.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --bg-card: #0f172a;
+            --teal: #2dd4bf;
+            --cyan: #06b6d4;
+            --purple: #a855f7;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --glow: rgba(45, 212, 191, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(45, 212, 191, 0.15), transparent),
+                radial-gradient(ellipse 60% 60% at 100% 100%, rgba(168, 85, 247, 0.1), transparent),
+                radial-gradient(ellipse 40% 40% at 0% 50%, rgba(6, 182, 212, 0.08), transparent);
+            z-index: 0;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--teal);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            background: rgba(3, 7, 18, 0.8);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--teal), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(168, 85, 247, 0.1));
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 var(--glow);
+            }
+
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 0 8px transparent;
+            }
+        }
+
+        /* Main Layout */
+        main {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 3rem;
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+            align-items: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--teal) 0%, var(--cyan) 50%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        /* 3D Orb */
+        .orb-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+        }
+
+        .orb {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(45, 212, 191, 0.8), rgba(6, 182, 212, 0.4) 50%, rgba(15, 23, 42, 0.9));
+            box-shadow:
+                0 0 60px var(--glow),
+                inset 0 0 60px rgba(45, 212, 191, 0.3),
+                0 0 120px rgba(45, 212, 191, 0.2);
+            animation: orbFloat 4s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .orb.listening {
+            background: radial-gradient(circle at 30% 30%, rgba(239, 68, 68, 0.8), rgba(239, 68, 68, 0.4) 50%, rgba(15, 23, 42, 0.9));
+            box-shadow: 0 0 80px rgba(239, 68, 68, 0.5), inset 0 0 60px rgba(239, 68, 68, 0.3);
+            animation: orbPulse 0.8s ease-in-out infinite;
+        }
+
+        .orb.speaking {
+            animation: orbSpeak 0.3s ease-in-out infinite;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.02);
+            }
+        }
+
+        @keyframes orbPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes orbSpeak {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(1.05);
+            }
+
+            75% {
+                transform: scale(0.98);
+            }
+        }
+
+        .orb-ring {
+            position: absolute;
+            inset: -20px;
+            border: 2px solid var(--teal);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: ringRotate 10s linear infinite;
+        }
+
+        @keyframes ringRotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .status-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--teal);
+        }
+
+        /* Feature Pills */
+        .feature-pills {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .pill {
+            padding: 0.5rem 1rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .pill:hover {
+            background: rgba(45, 212, 191, 0.2);
+            color: var(--teal);
+        }
+
+        /* Chat Window */
+        .chat-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-header {
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, var(--teal), var(--cyan));
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chat-header-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .chat-header-text h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--bg-dark);
+        }
+
+        .chat-header-text span {
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 85%;
+            animation: messageIn 0.3s ease-out;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message.agent {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 0.875rem 1.25rem;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, var(--teal), var(--cyan));
+            color: var(--bg-dark);
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message.agent .message-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--teal);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: rgba(45, 212, 191, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Chat Input */
+        .chat-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--teal);
+        }
+
+        .chat-input-area button {
+            width: 48px;
+            height: 48px;
+            background: var(--teal);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--bg-dark);
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-input-area button:hover {
+            background: var(--cyan);
+            transform: scale(1.05);
+        }
+
+        .chat-input-area button.recording {
+            background: #ef4444;
+            animation: recordPulse 1s infinite;
+        }
+
+        @keyframes recordPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px transparent;
+            }
+        }
+
+        /* Waveform */
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 24px;
+            padding: 0 0.5rem;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: var(--teal);
+            border-radius: 2px;
+            animation: waveAnim 0.5s ease-in-out infinite;
+        }
+
+        @keyframes waveAnim {
+
+            0%,
+            100% {
+                height: 8px;
+            }
+
+            50% {
+                height: 24px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+
+            .hero {
+                order: 2;
+            }
+
+            .chat-container {
+                order: 1;
+                height: 500px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <div class="logo">{{ business_name }}</div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button onclick="toggleLeadPanel()"
+                style="padding: 0.5rem 1rem; background: rgba(45, 212, 191, 0.2); border: 1px solid var(--teal); border-radius: 8px; color: var(--teal); cursor: pointer; font-size: 0.85rem;">
+                Leads
+            </button>
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Voice Clone Active
+            </div>
+        </div>
+    </header>
+
+    <!-- Lead Management Panel -->
+    <div class="lead-panel" id="leadPanel"
+        style="display: none; position: fixed; top: 60px; right: 20px; width: 350px; max-height: 70vh; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; z-index: 100; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div
+            style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1rem; font-weight: 600;">Lead Management</h3>
+            <button onclick="toggleLeadPanel()"
+                style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">X</button>
+        </div>
+
+        <!-- Upload Section -->
+        <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
+            <label
+                style="display: block; padding: 1rem; background: rgba(45, 212, 191, 0.1); border: 2px dashed var(--border); border-radius: 8px; text-align: center; cursor: pointer;">
+                <input type="file" id="csvUpload" accept=".csv" style="display: none;" onchange="uploadLeads(event)">
+                <span style="color: var(--teal); font-weight: 500;">Upload CSV</span>
+                <br><span style="font-size: 0.75rem; color: var(--text-muted);">name, email, phone, company,
+                    notes</span>
+            </label>
+        </div>
+
+        <!-- Current Lead -->
+        <div id="currentLeadDisplay" style="padding: 1rem; border-bottom: 1px solid var(--border); display: none;">
+            <div style="font-size: 0.75rem; color: var(--teal); text-transform: uppercase; margin-bottom: 0.5rem;">
+                Active Lead</div>
+            <div id="currentLeadInfo" style="font-weight: 600;"></div>
+            <button onclick="clearLead()"
+                style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 4px; color: #ef4444; font-size: 0.75rem; cursor: pointer;">Clear</button>
+        </div>
+
+        <!-- Lead List -->
+        <div id="leadList" style="max-height: 300px; overflow-y: auto; padding: 0.5rem;"></div>
+    </div>
+
+    <main>
+        <section class="hero">
+            <div class="orb-container">
+                <div class="orb-ring"></div>
+                <div class="orb" id="orb"></div>
+            </div>
+
+            <h1>Meet <span class="gradient-text">{{ agent_name }}</span></h1>
+            <p class="subtitle">Your AI-powered sales agent that qualifies leads, schedules meetings, and closes deals
+                around the clock — with your voice.</p>
+
+            <div class="status-text" id="statusText">Ready to Assist</div>
+
+            <div class="feature-pills">
+                <span class="pill">🧠 Gemini 3 Pro</span>
+                <span class="pill">⚡ Asymmetric Reasoning</span>
+                <span class="pill">🔍 Google Grounding</span>
+                <span class="pill">🔐 Q Protocol</span>
+            </div>
+
+            <!-- Thinking Level Selector -->
+            <div id="thinkingLevelPanel"
+                style="margin-top: 1.5rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span
+                    style="color: var(--text-muted); font-size: 0.8rem; margin-right: 0.5rem; align-self: center;">Thinking:</span>
+                <button class="thinking-btn active" data-level="high" onclick="setThinkingLevel('high')">🧠
+                    High</button>
+                <button class="thinking-btn" data-level="medium" onclick="setThinkingLevel('medium')">⚖️ Medium</button>
+                <button class="thinking-btn" data-level="low" onclick="setThinkingLevel('low')">⚡ Low</button>
+                <button class="thinking-btn" data-level="minimal" onclick="setThinkingLevel('minimal')">🚀
+                    Minimal</button>
+            </div>
+
+            <style>
+                .thinking-btn {
+                    padding: 0.4rem 0.8rem;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid var(--border);
+                    border-radius: 20px;
+                    color: var(--text-muted);
+                    font-size: 0.75rem;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+
+                .thinking-btn:hover {
+                    border-color: var(--teal);
+                    color: var(--teal);
+                }
+
+                .thinking-btn.active {
+                    background: rgba(45, 212, 191, 0.2);
+                    border-color: var(--teal);
+                    color: var(--teal);
+                }
+
+                .research-panel {
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    width: 350px;
+                    max-height: 400px;
+                    background: var(--bg-card);
+                    border: 1px solid var(--border);
+                    border-radius: 16px;
+                    z-index: 100;
+                    overflow: hidden;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                    display: none;
+                }
+
+                .research-header {
+                    padding: 1rem;
+                    border-bottom: 1px solid var(--border);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .research-content {
+                    padding: 1rem;
+                    max-height: 300px;
+                    overflow-y: auto;
+                    font-size: 0.85rem;
+                    line-height: 1.6;
+                }
+
+                .audit-badge {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 0.5rem 1rem;
+                    background: rgba(168, 85, 247, 0.2);
+                    border: 1px solid var(--purple);
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    color: var(--purple);
+                    cursor: pointer;
+                    z-index: 50;
+                }
+
+                .pitch-btn {
+                    background: linear-gradient(135deg, var(--purple), var(--cyan));
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 0.5rem;
+                }
+            </style>
+        </section>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-icon">C</div>
+                <div class="chat-header-text">
+                    <h2>{{ agent_name }} AI</h2>
+                    <span>Powered by Gemini</span>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message agent">
+                    <div class="message-bubble">
+                        Hi! I'm {{ agent_name }}, your AI sales agent. How can I help you today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="sendQuickMessage('Tell me about pricing')">Pricing</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Schedule a demo')">Book Demo</button>
+                <button class="quick-btn" onclick="generatePitch()">✨ Generate Pitch</button>
+                <button class="quick-btn" onclick="showAuditTrail()">🔐 Audit Trail</button>
+            </div>
+
+            <div class="chat-input-area">
+                <button id="micBtn" onclick="toggleMic()">&#127908;</button>
+                <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">&#10148;</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Research Panel -->
+    <div class="research-panel" id="researchPanel">
+        <div class="research-header">
+            <h3 style="font-size: 1rem; font-weight: 600;">🔍 Company Research</h3>
+            <button onclick="hideResearchPanel()"
+                style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">×</button>
+        </div>
+        <div class="research-content" id="researchContent">
+            <p style="color: var(--text-muted);">Select a lead to see company research...</p>
+        </div>
+        <div style="padding: 1rem; border-top: 1px solid var(--border);">
+            <button class="pitch-btn" onclick="generatePitch()" style="width: 100%;">✨ Generate Personalized
+                Pitch</button>
+        </div>
+    </div>
+
+    <!-- Audit Badge -->
+    <div class="audit-badge" id="auditBadge" onclick="showAuditTrail()">
+        🔐 <span id="auditCount">0</span> Decisions Logged
+    </div>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+
+            // PAYWALL LOGIC
+            const isPremium = {{ 'true' if is_premium else 'false' }
+        };
+        if (!isPremium) {
+            const badge = document.createElement('div');
+            badge.style.position = 'fixed';
+            badge.style.bottom = '0';
+            badge.style.width = '100%';
+            badge.style.background = '#f59e0b';
+            badge.style.color = 'black';
+            badge.style.textAlign = 'center';
+            badge.style.padding = '0.5rem';
+            badge.style.fontWeight = 'bold';
+            badge.style.zIndex = '1000';
+            badge.innerHTML = 'FREE TIER - <a href="/admin">Upgrade to remove branding</a>';
+            document.body.appendChild(badge);
+        }
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 15 + 's';
+        p.style.animationDuration = (10 + Math.random() * 10) + 's';
+        particlesContainer.appendChild(p);
+        }
+
+        // Elements
+        const orb = document.getElementById('orb');
+        const statusText = document.getElementById('statusText');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const micBtn = document.getElementById('micBtn');
+
+        function setStatus(state) {
+            orb.classList.remove('listening', 'speaking');
+            if (state === 'listening') {
+                orb.classList.add('listening');
+                statusText.textContent = "Listening...";
+                statusText.style.color = "#ef4444";
+            } else if (state === 'speaking') {
+                orb.classList.add('speaking');
+                statusText.textContent = "Speaking...";
+                statusText.style.color = "var(--teal)";
+            } else {
+                statusText.textContent = "Ready to Assist";
+                statusText.style.color = "var(--teal)";
+            }
+        }
+
+        function addMessage(type, text) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = `<div class="message-bubble">${text}</div>`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendQuickMessage(text) {
+            chatInput.value = text;
+            sendMessage();
+        }
+
+        // Current thinking level
+        let currentThinkingLevel = 'high';
+        let sessionId = 'session_' + Date.now();
+
+        function setThinkingLevel(level) {
+            currentThinkingLevel = level;
+            document.querySelectorAll('.thinking-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.level === level);
+            });
+            console.log('Thinking level:', level);
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage('user', text);
+            chatInput.value = '';
+
+            // Show thinking indicator based on level
+            const thinkingText = currentThinkingLevel === 'high' ? 'Deep thinking...' :
+                currentThinkingLevel === 'medium' ? 'Thinking...' : 'Processing...';
+            statusText.textContent = thinkingText;
+
+            try {
+                const response = await fetch('/demo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        thinking_level: currentThinkingLevel,
+                        session_id: sessionId
+                    })
+                });
+                const data = await response.json();
+
+                // Show thought signature in console (for demo/judging)
+                if (data.thought_signature) {
+                    console.log('[Q-PROTOCOL] Thought Signature:', data.thought_signature);
+                    console.log('[Q-PROTOCOL] Model:', data.model_used, '| Level:', data.thinking_level);
+                }
+
+                addMessage('agent', data.text);
+                updateAuditCount();
+                setStatus('speaking');
+                await speakWithElevenLabs(data.text);
+                setStatus('ready');
+            } catch (err) {
+                console.error(err);
+                addMessage('agent', "I'm having trouble connecting. Please try again.");
+                setStatus('ready');
+            }
+        }
+
+        // TTS
+        let audio = null;
+        async function speakWithElevenLabs(text) {
+            try {
+                const res = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                if (!res.ok) throw new Error("TTS Failed");
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+
+                return new Promise((resolve) => {
+                    if (audio) audio.pause();
+                    audio = new Audio(url);
+                    audio.onended = () => {
+                        resolve();
+                        setStatus('ready');
+                    };
+                    audio.play();
+                });
+            } catch (e) {
+                console.log("Fallback TTS");
+                const u = new SpeechSynthesisUtterance(text);
+                u.onend = () => setStatus('ready');
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        // Speech Recognition
+        let recognition = null;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                micBtn.classList.add('recording');
+                setStatus('listening');
+            };
+            recognition.onend = () => {
+                micBtn.classList.remove('recording');
+            };
+            recognition.onresult = (e) => {
+                const transcript = e.results[0][0].transcript;
+                chatInput.value = transcript;
+                sendMessage();
+            };
+        }
+
+        function toggleMic() {
+            if (!recognition) return alert("Speech recognition not supported");
+            recognition.start();
+        }
+
+        // ============ LEAD MANAGEMENT ============
+
+        function toggleLeadPanel() {
+            const panel = document.getElementById('leadPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function uploadLeads(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/leads/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                alert(data.message);
+                loadLeads();
+            } catch (e) {
+                console.error('Upload error:', e);
+                alert('Failed to upload leads');
+            }
+        }
+
+        async function loadLeads() {
+            try {
+                const res = await fetch('/api/leads');
+                const data = await res.json();
+                renderLeadList(data.leads);
+            } catch (e) {
+                console.error('Load leads error:', e);
+            }
+        }
+
+        function renderLeadList(leads) {
+            const list = document.getElementById('leadList');
+            if (!leads || leads.length === 0) {
+                list.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-muted);">No leads uploaded</div>';
+                return;
+            }
+            list.innerHTML = leads.map(lead => `
+                <div onclick="selectLead('${lead.id}')" style="padding: 0.75rem; margin: 0.25rem 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                     onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-weight: 600; font-size: 0.9rem;">${lead.name || 'Unknown'}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">${lead.company || ''} • ${lead.email || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        async function selectLead(leadId) {
+            try {
+                statusText.textContent = '🔍 Researching company...';
+
+                const res = await fetch(`/api/leads/select/${leadId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ auto_research: true, session_id: sessionId })
+                });
+                const data = await res.json();
+
+                // Update current lead display
+                const display = document.getElementById('currentLeadDisplay');
+                const info = document.getElementById('currentLeadInfo');
+                display.style.display = 'block';
+                info.innerHTML = `${data.lead.name}<br><span style="font-size: 0.8rem; color: var(--text-muted);">${data.lead.company || ''}</span>`;
+
+                // Show research if available
+                if (data.research && data.research.summary) {
+                    showResearchPanel(data.research);
+                    addMessage('agent', `I've researched ${data.lead.company}. I can see their key opportunities. Would you like me to generate a personalized pitch?`);
+                } else {
+                    addMessage('agent', `I see you're speaking with ${data.lead.name}. How can I help with their needs?`);
+                }
+
+                setStatus('ready');
+                updateAuditCount();
+                toggleLeadPanel();
+            } catch (e) {
+                console.error('Select lead error:', e);
+                setStatus('ready');
+            }
+        }
+
+        function showResearchPanel(research) {
+            const panel = document.getElementById('researchPanel');
+            const content = document.getElementById('researchContent');
+            content.innerHTML = `
+                <div style="margin-bottom: 0.5rem; font-weight: 600; color: var(--teal);">${research.company}</div>
+                <div style="white-space: pre-wrap;">${research.summary}</div>
+                <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+                    🔐 Signature: ${research.thought_signature || 'N/A'}
+                </div>
+            `;
+            panel.style.display = 'block';
+        }
+
+        function hideResearchPanel() {
+            document.getElementById('researchPanel').style.display = 'none';
+        }
+
+        async function generatePitch() {
+            statusText.textContent = '✨ Generating personalized pitch...';
+            try {
+                const res = await fetch('/api/pitch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId })
+                });
+                const data = await res.json();
+
+                if (data.pitch) {
+                    addMessage('agent', data.pitch);
+                    updateAuditCount();
+                    setStatus('speaking');
+                    await speakWithElevenLabs(data.pitch);
+                } else {
+                    addMessage('agent', 'Please select a lead first so I can create a personalized pitch.');
+                }
+                setStatus('ready');
+            } catch (e) {
+                console.error('Pitch error:', e);
+                addMessage('agent', 'Please select a lead first.');
+                setStatus('ready');
+            }
+        }
+
+        async function showAuditTrail() {
+            try {
+                const res = await fetch('/api/audit');
+                const data = await res.json();
+
+                let auditHtml = '<div style="font-weight: 600; margin-bottom: 1rem;">🔐 Q-Protocol Decision Audit</div>';
+                auditHtml += `<div style="margin-bottom: 1rem; color: var(--text-muted);">Total decisions: ${data.total_decisions}</div>`;
+
+                data.audit_log.slice(-5).reverse().forEach(entry => {
+                    auditHtml += `
+                        <div style="margin-bottom: 0.75rem; padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: 8px; font-size: 0.8rem;">
+                            <div style="color: var(--teal); font-weight: 500;">${entry.action}</div>
+                            <div style="color: var(--text-muted); margin-top: 0.25rem;">${entry.reasoning.substring(0, 100)}...</div>
+                            <div style="color: var(--purple); font-size: 0.7rem; margin-top: 0.25rem;">Level: ${entry.thinking_level} | Sig: ${entry.thought_signature}</div>
+                        </div>
+                    `;
+                });
+
+                const content = document.getElementById('researchContent');
+                content.innerHTML = auditHtml;
+                document.getElementById('researchPanel').style.display = 'block';
+            } catch (e) {
+                console.error('Audit error:', e);
+            }
+        }
+
+        async function updateAuditCount() {
+            try {
+                const res = await fetch('/api/audit');
+                const data = await res.json();
+                document.getElementById('auditCount').textContent = data.total_decisions;
+            } catch (e) { }
+        }
+
+        async function clearLead() {
+            try {
+                await fetch('/api/leads/clear', { method: 'POST' });
+                document.getElementById('currentLeadDisplay').style.display = 'none';
+                document.getElementById('currentLeadInfo').innerHTML = '';
+            } catch (e) {
+                console.error('Clear lead error:', e);
+            }
+        }
+
+        // Load leads on page load
+        loadLeads();
+        updateAuditCount();
+    </script>
+</body>
+
+</html>

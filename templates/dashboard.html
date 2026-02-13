@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Clairvoyant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --bg-card: #0f172a;
+            --teal: #2dd4bf;
+            --teal-dark: #14b8a6;
+            --text-primary: #ffffff;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: 3rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--teal), #0ea5e9);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--teal);
+        }
+
+        .user-profile {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--bg-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-trend {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-trend.up {
+            color: var(--teal);
+        }
+
+        /* Leads Table */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        td {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.success {
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--teal);
+        }
+
+        .status-badge.warning {
+            background: rgba(234, 179, 8, 0.1);
+            color: #eab308;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/" class="logo">
+            <span class="logo-icon">💬</span>
+            <span>Clairvoyant</span>
+        </a>
+        <nav>
+            <a href="#" class="nav-item active">📊 Dashboard</a>
+            <a href="#" class="nav-item">📞 Campaigns</a>
+            <a href="#" class="nav-item">👥 Leads (Salesforce)</a>
+            <a href="#" class="nav-item">📈 Analytics</a>
+            <a href="#" class="nav-item">⚙️ Settings</a>
+        </nav>
+        <div class="user-profile">
+            <div class="avatar">PH</div>
+            <div class="user-info">
+                <div style="font-weight: 600;">Phil Hills</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Admin</div>
+            </div>
+            <button onclick="logout()"
+                style="margin-left: auto; background: none; border: none; cursor: pointer; color: var(--text-muted);">↪️</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Dashboard</h1>
+            <button class="action-btn"
+                style="background: var(--teal); color: var(--bg-dark); border: none; font-weight: 600;">
+                + New Campaign
+            </button>
+        </div>
+
+        <div id="dashboard-view">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Calls Made (Today)</div>
+                    <div class="stat-value" id="stats-calls">--</div>
+                    <div class="stat-trend up">Synced from Salesforce</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Appointments Booked</div>
+                    <div class="stat-value" id="stats-appts">--</div>
+                    <div class="stat-trend up">Synced from Salesforce</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Salesforce Sync Status</div>
+                    <div class="stat-value" id="stats-status"
+                        style="color: var(--teal); font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: block;"></span>
+                        Checking...
+                    </div>
+                    <div class="stat-trend" id="stats-last-sync">Last sync: Just now</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Activity (Live Feed)</h3>
+                    <button class="action-btn" onclick="fetchData()">Refresh</button>
+                </div>
+                <table id="leadsTable">
+                    <thead>
+                        <tr>
+                            <th>Lead</th>
+                            <th>Status</th>
+                            <th>Company</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-body">
+                        <!-- Populated by JS -->
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading
+                                Salesforce Data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="campaigns-view" style="display: none;">
+            <div class="header">
+                <h2>Campaign Management</h2>
+            </div>
+
+            <!-- Upload Section -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div class="card" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Option A: Upload CSV</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <input type="file" id="campaignFile" accept=".csv"
+                            style="padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); width: 100%;">
+                        <button class="action-btn" onclick="uploadCampaign()" style="width: 100%;">Upload &
+                            Analyze</button>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Option B: Salesforce Import</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="sfCampaignId" placeholder="Enter Salesforce Campaign ID"
+                            style="padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); width: 100%;">
+                        <button class="action-btn" onclick="importSFCampaign()"
+                            style="width: 100%; border-color: #00A1E0; color: #00A1E0;">
+                            Sync from Salesforce ☁️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Section (Hidden initially) -->
+            <div id="campaign-controls" class="card" style="padding: 2rem; margin-bottom: 2rem; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem;">2. Power Dialer Configuration</h3>
+                        <p style="color: var(--text-muted);">Ready to dial <span id="campaign-loaded-count"
+                                style="color: var(--teal); font-weight: 700;">0</span> leads.</p>
+                    </div>
+                    <button class="action-btn" onclick="startCampaign()"
+                        style="background: var(--teal); color: var(--bg-dark); font-weight: 700; padding: 0.75rem 1.5rem; font-size: 1rem;">
+                        ▶ Start Power Dialer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Dialer Status (Hidden initially) -->
+            <div id="dialer-active-panel" class="card" style="padding: 2rem; display: none; border-color: var(--teal);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="width: 10px; height: 10px; background: #ef4444; border-radius: 50%; animation: pulse 1.5s infinite;"></span>
+                        Live Dialer Active
+                    </h3>
+                    <button class="action-btn" onclick="stopCampaign()" style="border-color: #ef4444; color: #ef4444;">⏹
+                        Stop</button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div
+                    style="width: 100%; height: 8px; background: var(--bg-dark); border-radius: 4px; margin-bottom: 1.5rem; overflow: hidden;">
+                    <div id="dialer-progress-bar"
+                        style="width: 0%; height: 100%; background: var(--teal); transition: width 0.3s ease;"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Current Lead</div>
+                        <div id="dialer-current-lead" style="font-size: 1.1rem; font-weight: 600;">--</div>
+                        <div id="dialer-current-status" style="font-size: 0.8rem; color: var(--teal);">Waiting...</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Dialed</div>
+                        <div id="stat-dialed" style="font-size: 1.5rem; font-weight: 700;">0</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Connected</div>
+                        <div id="stat-connected" style="font-size: 1.5rem; font-weight: 700;">0</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">Appointments</div>
+                        <div id="stat-appointments" style="font-size: 1.5rem; font-weight: 700; color: var(--teal);">0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            @keyframes pulse {
+                0% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.5;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+        </style>
+
+        <div id="leads-view" style="display: none;">
+            <h2>All Leads</h2>
+            <p style="color: var(--text-muted); margin-top: 1rem;">Full lead list coming soon.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOCAbC123dEfGhIjKlMnOpQrStUvWxYz",
+            authDomain: "movement-voice-agent.firebaseapp.com",
+            projectId: "movement-voice-agent",
+            storageBucket: "movement-voice-agent.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Global Logout function
+        window.logout = function () {
+            signOut(auth).then(() => {
+                localStorage.removeItem('authToken');
+                window.location.href = '/';
+            }).catch((error) => {
+                console.error("Logout error", error);
+                // Fallback
+                localStorage.removeItem('authToken');
+                window.location.href = '/';
+            });
+        }
+
+        // Auth Guardian
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Authorized via Firebase: ", user.email);
+                // Update UI with user info
+                document.querySelector('.user-info div').textContent = user.displayName || user.email.split('@')[0];
+                document.querySelector('.avatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+            } else {
+                // Check Demo/Hackathon Legacy Token
+                if (!localStorage.getItem('authToken')) {
+                    console.warn("No session found. Redirecting...");
+                    window.location.href = '/?auth_error=true';
+                } else {
+                    console.log("Authorized via LocalStorage (Demo Mode)");
+                }
+            }
+        });
+    </script>
+
+    <script>
+        // Legacy/Demo check removed here as it is handled in the module above
+        // leaving helper functions
+
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                const text = item.textContent.trim();
+                document.getElementById('dashboard-view').style.display = 'none';
+                document.getElementById('campaigns-view').style.display = 'none';
+                document.getElementById('leads-view').style.display = 'none';
+
+                if (text.includes('Dashboard')) {
+                    document.getElementById('dashboard-view').style.display = 'block';
+                } else if (text.includes('Campaigns')) {
+                    document.getElementById('campaigns-view').style.display = 'block';
+                } else if (text.includes('Leads')) {
+                    document.getElementById('leads-view').style.display = 'block';
+                }
+            });
+        });
+
+        async function fetchData() {
+            try {
+                // Fetch Stats
+                const statsResponse = await fetch('/api/dashboard/stats');
+                const stats = await statsResponse.json();
+
+                document.getElementById('stats-calls').innerText = stats.calls_today;
+                document.getElementById('stats-appts').innerText = stats.appointments;
+
+                const statusEl = document.getElementById('stats-status');
+                if (stats.sync_status === 'Connected') {
+                    statusEl.innerHTML = `<span style="width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: block;"></span> Connected`;
+                } else {
+                    statusEl.innerHTML = `<span style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: block;"></span> ${stats.sync_status}`;
+                }
+
+                // Fetch Recent Leads
+                const leadsResponse = await fetch('/api/dashboard/leads');
+                const leadsData = await leadsResponse.json();
+                const tbody = document.getElementById('leads-body');
+                tbody.innerHTML = '';
+
+                if (leadsData.leads && leadsData.leads.length > 0) {
+                    leadsData.leads.forEach(lead => {
+                        const actionBtn = lead.RecordingUrl
+                            ? `<a href="${lead.RecordingUrl}" target="_blank" class="action-btn" style="text-decoration: none; color: inherit; display: inline-block;">▶ Play Recording</a>`
+                            : `<button class="action-btn">View Log</button>`;
+
+                        const row = `
+                            <tr>
+                                <td>${lead.FullName || 'Unknown'}</td>
+                                <td><span class="status-badge ${getStatusClass(lead.Status)}">${lead.Status}</span></td>
+                                <td>${lead.Company || '-'}</td>
+                                <td>${lead.LastActionTime || 'Recently'}</td>
+                                <td>${actionBtn}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 2rem;">No recent activity found</td></tr>`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function getStatusClass(status) {
+            if (status.includes('Qualified') || status.includes('Appointment')) return 'success';
+            if (status.includes('Contacted') || status.includes('Callback')) return 'warning';
+            return '';
+        }
+
+        // Initial Load
+        fetchData();
+        // Auto-refresh every 30s
+        setInterval(fetchData, 30000);
+
+        // --- CAMPAIGN FUNCTIONS ---
+
+        async function uploadCampaign() {
+            const fileInput = document.getElementById('campaignFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a CSV file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/campaigns/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('campaign-controls').style.display = 'block';
+                    document.getElementById('campaign-loaded-count').innerText = data.count;
+                    alert(`Successfully loaded ${data.count} leads.`);
+                } else {
+                    alert('Error loading campaign: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Upload failed', error);
+                alert('Upload failed. See console.');
+            }
+        }
+
+        async function importSFCampaign() {
+            const campaignId = document.getElementById('sfCampaignId').value;
+            if (!campaignId) {
+                alert('Please enter a Salesforce Campaign ID.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/campaigns/import-salesforce', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ campaign_id: campaignId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('campaign-controls').style.display = 'block';
+                    document.getElementById('campaign-loaded-count').innerText = data.count;
+                    alert(`Successfully imported ${data.count} leads from Salesforce.`);
+                } else {
+                    alert('Error importing from Salesforce: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Import failed', error);
+                alert('Import failed. See console.');
+            }
+        }
+
+        async function startCampaign() {
+            try {
+                await fetch('/api/campaigns/start', { method: 'POST' });
+                document.getElementById('dialer-active-panel').style.display = 'block';
+                document.getElementById('campaign-controls').style.display = 'none';
+
+                // Start polling status
+                pollInterval = setInterval(pollCampaignStatus, 1000);
+            } catch (error) {
+                alert('Failed to start campaign.');
+            }
+        }
+
+        async function stopCampaign() {
+            try {
+                await fetch('/api/campaigns/stop', { method: 'POST' });
+                if (pollInterval) clearInterval(pollInterval);
+                document.getElementById('dialer-current-status').innerText = "Stopped";
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        let pollInterval = null;
+
+        async function pollCampaignStatus() {
+            try {
+                const response = await fetch('/api/campaigns/status');
+                const data = await response.json();
+
+                if (!data.active) {
+                    clearInterval(pollInterval);
+                    document.getElementById('dialer-current-status').innerText = "Completed";
+                    document.getElementById('dialer-progress-bar').style.width = '100%';
+                    return;
+                }
+
+                // Update stats
+                document.getElementById('stat-dialed').innerText = data.stats.dialed;
+                document.getElementById('stat-connected').innerText = data.stats.connected;
+                document.getElementById('stat-appointments').innerText = data.stats.appointments;
+
+                // Update progress
+                const progress = (data.current_index / data.total) * 100;
+                document.getElementById('dialer-progress-bar').style.width = `${progress}%`;
+
+                // Update Current Lead info (approximate based on index)
+                document.getElementById('dialer-current-lead').innerText = `Lead #${data.current_index + 1}`;
+                document.getElementById('dialer-current-status').innerText = "Dialing...";
+
+            } catch (error) {
+                console.error('Polling error', error);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Admin - Sales AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .section-header {
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background: #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="section-header">
+            <h1>Platform Configuration</h1>
+            <a href="/" style="color: #6366f1; text-decoration: none;">&larr; Back to Chat</a>
+        </div>
+
+        <div class="form-group">
+            <div class="section-header" style="margin-bottom: 1rem;">
+                <h2>Subscription Status</h2>
+                <span id="subStatus" class="status-badge">Checking...</span>
+            </div>
+            <p id="usageStats">Usage: 0/10 (Free Tier)</p>
+            <div style="margin-top: 1rem;">
+                <button onclick="upgradeSubscription()" class="btn" style="background: #22c55e;">Upgrade to
+                    Premium</button>
+                <button onclick="resetUsage()" class="btn" style="background: #f59e0b; margin-left: 1rem;">Reset Usage
+                    (Dev)</button>
+            </div>
+        </div>
+
+        <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #eee;">
+
+        <form id="configForm">
+            <h2>Business Profile</h2>
+
+            <div class="form-group">
+                <label for="businessName">Business Name</label>
+                <input type="text" id="businessName" placeholder="e.g., Galaxy Cars">
+            </div>
+
+            <div class="form-group">
+                <label for="industry">Industry</label>
+                <input type="text" id="industry" placeholder="e.g., Automotive Retail">
+            </div>
+
+            <div class="form-group">
+                <label for="agentName">AI Agent Name</label>
+                <input type="text" id="agentName" placeholder="e.g., Alex">
+            </div>
+
+            <div class="form-group">
+                <label for="tone">Agent Tone</label>
+                <input type="text" id="tone" placeholder="e.g., Professional, high-energy, helpful">
+            </div>
+
+            <div class="form-group">
+                <label for="productDesc">Product/Service Description</label>
+                <textarea id="productDesc" placeholder="Describe what you are selling..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="goals">Goals</label>
+                <textarea id="goals" placeholder="What should the agent achieve? e.g., Book test drives"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="compliance">Compliance/Rules</label>
+                <textarea id="compliance" placeholder="Any specific rules? e.g., Don't promise discounts"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Save Configuration</button>
+        </form>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function loadStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/api/platform/status`);
+                const data = await res.json();
+
+                // Fill Form
+                document.getElementById('businessName').value = data.profile.name;
+                document.getElementById('industry').value = data.profile.industry;
+                document.getElementById('agentName').value = data.profile.agent_name;
+                document.getElementById('tone').value = data.profile.tone;
+                document.getElementById('productDesc').value = data.profile.product_description;
+                document.getElementById('goals').value = data.profile.goals;
+                document.getElementById('compliance').value = data.profile.compliance_rules;
+
+                // Update Status
+                const sub = data.subscription;
+                const badge = document.getElementById('subStatus');
+                if (sub.is_active) {
+                    badge.textContent = "PREMIUM ACTIVE";
+                    badge.classList.add('active');
+                    document.getElementById('usageStats').textContent = "Usage: Unlimited";
+                } else {
+                    badge.textContent = "FREE TIER";
+                    badge.classList.remove('active');
+                    document.getElementById('usageStats').textContent = `Usage: ${sub.usage_count}/${sub.usage_limit}`;
+                }
+            } catch (e) {
+                console.error("Failed to load status", e);
+            }
+        }
+
+        async function upgradeSubscription() {
+            await fetch(`${API_BASE}/api/platform/subscribe`, { method: 'POST' });
+            loadStatus();
+            alert("Upgraded to Premium!");
+        }
+
+        async function resetUsage() {
+            await fetch(`${API_BASE}/api/platform/reset_usage`, { method: 'POST' });
+            loadStatus();
+            alert("Usage reset!");
+        }
+
+        document.getElementById('configForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('businessName').value,
+                industry: document.getElementById('industry').value,
+                agent_name: document.getElementById('agentName').value,
+                tone: document.getElementById('tone').value,
+                product_description: document.getElementById('productDesc').value,
+                goals: document.getElementById('goals').value,
+                compliance_rules: document.getElementById('compliance').value
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/api/platform/configure`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) alert("Configuration Saved!");
+                else alert("Error saving configuration");
+            } catch (e) {
+                alert("Network error");
+            }
+        });
+
+        // Initialize
+        loadStatus();
+
+        // Fix syntax error in my own script block defined above (I wrote `async def` instead of `async function`)
+        // Correcting it now in the file write content
+    </script>
+</body>
+
+</html>
