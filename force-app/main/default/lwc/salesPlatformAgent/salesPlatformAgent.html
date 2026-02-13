@@ -1,0 +1,66 @@
+<template>
+    <lightning-card title="Sales AI Platform">
+        <lightning-button label="Research Company" slot="actions" onclick={handleResearch}></lightning-button>
+
+        <!-- Premium Badge -->
+        <template if:true={isPremium}>
+            <span slot="actions" class="slds-badge slds-theme_success slds-m-right_small">PREMIUM</span>
+        </template>
+
+        <div class="slds-p-around_medium relative-container">
+
+            <!-- Research Result -->
+            <template if:true={research}>
+                <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                    <p><strong>Research Summary:</strong></p>
+                    <p>{research.summary}</p>
+                </div>
+            </template>
+
+            <!-- Chat Window -->
+            <div class="chat-window"
+                style="height:300px;overflow-y:auto;border:1px solid #ddd;padding:10px;border-radius:4px;">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.class}>
+                        <div class="message-bubble">
+                            {msg.text}
+                        </div>
+                    </div>
+                </template>
+                <template if:true={isThinking}>
+                    <div class="inbound">
+                        <div class="message-bubble thinking">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Input Area -->
+            <div class="slds-m-top_medium">
+                <lightning-input label="Ask AI Agent" placeholder="Type your message..." value={input}
+                    onchange={handleInputChange} oncommit={handleSend} disabled={isPaywalled}>
+                </lightning-input>
+                <div class="slds-m-top_x-small slds-text-align_right">
+                    <lightning-button label="Send" variant="brand" onclick={handleSend}
+                        disabled={isPaywalled}></lightning-button>
+                </div>
+            </div>
+
+            <!-- Paywall Overlay -->
+            <template if:true={isPaywalled}>
+                <div class="paywall-overlay">
+                    <div class="paywall-content">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_small">⚠️ Usage Limit Reached</h2>
+                        <p>You have exceeded the free tier limits for this month.</p>
+                        <p class="slds-m-vertical_small">Upgrade to <strong>Premium</strong> to continue using the Sales
+                            AI Agent.</p>
+                        <lightning-button label="Upgrade Now" variant="destructive"
+                            onclick={handleUpgradeClick}></lightning-button>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

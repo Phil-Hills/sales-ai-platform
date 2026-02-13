@@ -1,0 +1,95 @@
+.chat-window {
+    background-color: #f8f9fa;
+}
+
+.outbound {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.inbound {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.outbound .message-bubble {
+    background-color: #0070d2;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.inbound .message-bubble {
+    background-color: #e3e5ed;
+    color: #1a1b1e;
+    border-bottom-left-radius: 2px;
+}
+
+.error .message-bubble {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Thinking Dots */
+.thinking {
+    background-color: #e3e5ed;
+    padding: 10px 20px;
+}
+
+.dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #555;
+    margin-right: 4px;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+/* Paywall Overlay */
+.relative-container {
+    position: relative;
+    min-height: 400px;
+}
+
+.paywall-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+.paywall-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    max-width: 80%;
+}
