@@ -10,3 +10,5 @@ simple-salesforce
 httpx>=0.25.0
 msgpack
 blake3
+aiofiles
+vonage

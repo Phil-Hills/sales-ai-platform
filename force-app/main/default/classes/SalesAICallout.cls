@@ -1,6 +1,6 @@
 public with sharing class SalesAICallout {
     // TODO: Replace with Named Credential or Custom Metadata in production
-    private static final String ENDPOINT = 'https://movement-voice-demo-511662304947.us-central1.run.app'; 
+    private static final String ENDPOINT = 'https://sales-ai-platform-235894147478.us-central1.run.app'; 
 
     public class AgentException extends Exception {}
 

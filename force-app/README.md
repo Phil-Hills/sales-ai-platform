@@ -6,7 +6,7 @@ This directory contains the Salesforce metadata (Apex, LWC) required to run the 
 
 ### Apex Classes
 - `SalesAICallout.cls`: Handles API calls to the Cloud Run backend.
-    - **Endpoint**: Defaults to `https://movement-voice-demo-511662304947.us-central1.run.app`. Update this in the class or use Named Credentials for production.
+    - **Endpoint**: Defaults to `https://sales-ai-platform-235894147478.us-central1.run.app`. Update this in the class or use Named Credentials for production.
 - `SalesAIOrchestrator.cls`: Handles asynchronous lead handoffs to the platform.
 
 ### Lightning Web Components (LWC)
