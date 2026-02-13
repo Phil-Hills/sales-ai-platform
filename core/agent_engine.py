@@ -15,7 +15,7 @@ class AgentResponse(BaseModel):
     """Secure, validated response structure for the Movement Voice Agent."""
     text: str
     thinking_level: str
-    persona: str = "Jason"
+    persona: str = "Assistant"
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
     thought_signature: Optional[str] = None
     actions: List[Dict[str, Any]] = []
@@ -29,7 +29,7 @@ class AgentEngine:
     Core engine for handling AI persona logic and LLM orchestration.
     
     SECURITY ARCHITECTURE:
-    - Persona Unification: Enforces the 'Jason' identity to prevent persona hijacking.
+    - Persona Unification: Enforces the 'Assistant' identity to prevent persona hijacking.
     - Thought Signatures: Generates cryptographic signatures for every reasoning step.
     - Hallucination Control: Optimized for deterministic responses using specified behavioral rules.
 
@@ -132,8 +132,9 @@ Always prioritize helpful conversation.
     async def get_response(self, text: str, lead: Optional[dict] = None, thinking_level: str = "medium") -> dict:
         """Orchestrates LLM response generation with thinking traces and validation."""
         
+        
         # 1. Check Subscription/Paywall
-        if not self.platform_manager.check_access():
+        if not await self.platform_manager.check_access():
             return AgentResponse(
                 text="⚠️ Usage Limit Reached. Please upgrade your subscription to continue using this agent.",
                 thinking_level="none",

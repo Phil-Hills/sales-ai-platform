@@ -53,7 +53,7 @@ class CampaignManager:
                     "state": row.get("Subject Property: Address: State") or row.get("State", "WA"),
                     "loan_amount": row.get("Total Loan Amount") or row.get("Amount", "$0"),
                     "interest_rate": row.get("Interest Rate", "0.0%"),
-                    "company": "Mortgage Services" # Default context
+                    "company": "General Services" # Default context
                 }
                 self.active_campaign.append(lead)
             
@@ -126,9 +126,9 @@ class CampaignManager:
             
             # Generate NCCO based on mode
             if lead.get('type') == 'broker':
-                greeting = f"Hi {lead['name']}, this is Jason calling from the local Mortgage Branch. I'm reaching out because we've launched some new loan programs that could be a huge asset for your agents' listings right now."
+                greeting = f"Hi {lead['name']}, this is Assistant calling from the local office. I'm reaching out because we've launched some new programs that could be a huge asset for your agents' listings right now."
             else:
-                greeting = f"Hello {lead['name']}, this is Jason, an AI mortgage specialist. I'm calling to follow up on your mortgage interest."
+                greeting = f"Hello {lead['name']}, this is Assistant, an AI specialist. I'm calling to follow up on your interest."
             
             ncco = self.vonage.generate_ncco(text=greeting)
             

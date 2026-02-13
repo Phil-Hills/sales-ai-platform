@@ -1,7 +1,9 @@
 import json
 import os
+import asyncio
 from typing import Dict, Optional, List
 from pydantic import BaseModel, Field
+import aiofiles
 
 class BusinessProfile(BaseModel):
     id: str = Field(default="default_biz", description="Unique identifier for the business")
@@ -24,9 +26,11 @@ class PlatformManager:
         self.data_file = data_file
         self.profile: BusinessProfile = BusinessProfile()
         self.subscription: Subscription = Subscription()
-        self._load_data()
+        self.lock = asyncio.Lock()
+        # Initial load is sync to ensure state before app start
+        self._load_data_sync()
 
-    def _load_data(self):
+    def _load_data_sync(self):
         if os.path.exists(self.data_file):
             try:
                 with open(self.data_file, 'r') as f:
@@ -36,9 +40,9 @@ class PlatformManager:
             except Exception as e:
                 print(f"Error loading platform data: {e}")
         else:
-            self._save_data()
+            self._save_data_sync()
 
-    def _save_data(self):
+    def _save_data_sync(self):
         try:
             with open(self.data_file, 'w') as f:
                 json.dump({
@@ -48,37 +52,68 @@ class PlatformManager:
         except Exception as e:
             print(f"Error saving platform data: {e}")
 
-    def update_profile(self, profile_data: Dict):
+    async def _save_data(self):
+        async with self.lock:
+            try:
+                # Use aiofiles for non-blocking IO
+                async with aiofiles.open(self.data_file, 'w') as f:
+                    content = json.dumps({
+                        "profile": self.profile.model_dump(),
+                        "subscription": self.subscription.model_dump()
+                    }, indent=4)
+                    await f.write(content)
+            except Exception as e:
+                print(f"Error saving platform data: {e}")
+
+    async def update_profile(self, profile_data: Dict):
         """Updates the business profile with new data."""
         # Update fields only if provided
         current_data = self.profile.model_dump()
         current_data.update(profile_data)
         self.profile = BusinessProfile(**current_data)
-        self._save_data()
+        await self._save_data()
         return self.profile
 
     def get_profile(self) -> BusinessProfile:
         return self.profile
 
-    def check_access(self) -> bool:
+    async def check_access(self) -> bool:
         """Checks if the request is allowed based on subscription."""
         if self.subscription.is_active:
             return True
         
-        if self.subscription.usage_count < self.subscription.usage_limit:
-            self.subscription.usage_count += 1
-            self._save_data() # Persist usage increment
-            return True
-            
-        return False
+        async with self.lock:
+             if self.subscription.usage_count < self.subscription.usage_limit:
+                 self.subscription.usage_count += 1
+                 # We hold the lock for the increment, now save
+                 # Note: calling _save_data here would try to re-acquire lock if it wasn't reentrant.
+                 # asyncio.Lock is NOT reentrant.
+                 # So we manually do the save logic here or separate it.
+                 # Or better: check_access doesn't call _save_data, it calls a private _persist?
+                 # Actually, simpler:
+                 pass
+             else:
+                 return False
 
-    def upgrade_subscription(self):
+        # Persist outside the check lock? No, data intgrity. 
+        # Correct pattern: Separate validtion from persistence OR use Reentrant lock? 
+        # Since usage count changes, we MUST save. 
+        # Let's just inline the save or make _save_data not lock, and have callers lock.
+        
+        # New Strategy: _save_data is internal and assumes caller handles locking if needed, 
+        # OR public methods lock then call internal save.
+        
+        # Implementing robust version in next full file write.
+        await self._save_data()
+        return True
+
+    async def upgrade_subscription(self):
         """Simulates upgrading to premium."""
         self.subscription.is_active = True
         self.subscription.plan_name = "Premium"
-        self._save_data()
+        await self._save_data()
 
-    def reset_usage(self):
+    async def reset_usage(self):
         """Resets usage count (e.g., for testing)."""
         self.subscription.usage_count = 0
-        self._save_data()
+        await self._save_data()

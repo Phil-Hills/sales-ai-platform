@@ -1,0 +1,12 @@
+fastapi>=0.100.0
+uvicorn>=0.23.0
+google-generativeai>=0.3.0
+google-cloud-firestore>=2.14.0
+google-cloud-aiplatform
+python-multipart
+jinja2
+python-dotenv
+simple-salesforce
+httpx>=0.25.0
+msgpack
+blake3

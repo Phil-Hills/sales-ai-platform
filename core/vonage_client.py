@@ -20,19 +20,21 @@ class VonageClient:
         
         self.client = self._initialize_client()
 
-    def _initialize_client(self) -> Optional[vonage.Client]:
+    def _initialize_client(self) -> Optional[Any]:
         """Initializes the Vonage client using provided credentials."""
         if not all([self.api_key, self.application_id]):
             logger.warning("⚠️ Vonage credentials missing. Telephony in simulation mode.")
             return None
             
         try:
-            return vonage.Client(
-                key=self.api_key,
-                secret=self.api_secret,
+            # v3 SDK Support
+            auth = vonage.Auth(
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 application_id=self.application_id,
                 private_key=self.private_key_path
             )
+            return vonage.Vonage(auth=auth)
         except Exception as e:
             logger.error(f"❌ Failed to initialize Vonage client: {e}")
             return None

@@ -1,7 +1,7 @@
 """
 Salesforce AgentForce Integration Client
 
-This module provides integration with Salesforce CRM for the Movement Voice Agent.
+This module provides integration with Salesforce CRM for the Sales AI Agent.
 It handles authentication, lead retrieval, disposition updates, and task creation.
 
 Part of the Q Protocol dual-orchestrator architecture.
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class SalesforceClient:
     """
-    Salesforce CRM client for Movement Voice Agent.
+    Salesforce CRM client for Sales AI Agent.
     
     Implements the Salesforce-side orchestrator of the Q Protocol,
     syncing agent state, lead data, and call dispositions.

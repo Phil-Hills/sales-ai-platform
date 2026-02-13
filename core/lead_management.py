@@ -33,7 +33,7 @@ class ConversationEntry(BaseModel):
 
 class LeadManager:
     """
-    Handles lead storage, retrieval, and processing for the Movement Voice Agent.
+    Handles lead storage, retrieval, and processing for the Sales AI Agent.
     
     SECURITY PROTOCOLS:
     - Data Sovereignty: Supports in-memory storage for air-gapped sandbox environments.
@@ -151,7 +151,7 @@ class LeadManager:
                 "name": row.get("Primary Borrower", row.get("name", row.get("Name", "Unknown"))),
                 "email": row.get("Primary Borrower: Email", row.get("email", row.get("Email", ""))),
                 "phone": row.get("phone", row.get("Phone", "")),
-                "company": row.get("company", row.get("Company", "Mortgage Services")),
+                "company": row.get("company", row.get("Company", "General Services")),
                 "notes": f"Program: {row.get('Program', 'N/A')}. (Ref: {row.get('Loan Number', 'N/A')})",
                 "source": "csv_upload",
                 "status": "new"
